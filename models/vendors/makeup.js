@@ -2,11 +2,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const makeupSchema = new Schema({
-    name :{
+    name: {
         type: String,
         required: [true, 'A makeup artist must have a name']
     },
-    contactDetails:{
+    contactDetails: {
         phone: {
             type: String,
             required: [true, 'A makeup artist must have a phone number']
@@ -24,7 +24,7 @@ const makeupSchema = new Schema({
     specialities: [String], // bridal, party, etc
     experienceYears: Number,
     productsUsed: [String], // List of brands
-    clientReviews:[
+    clientReviews: [
         {
             clientName: String,
             review: String,
@@ -36,3 +36,6 @@ const makeupSchema = new Schema({
         }
     ]
 })
+
+const Makeup = mongoose.model('Makeup', makeupSchema)
+module.exports = Makeup

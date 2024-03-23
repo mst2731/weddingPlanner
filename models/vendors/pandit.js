@@ -2,11 +2,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const panditSchema = new Schema({
-    name :{
+    name: {
         type: String,
         required: [true, 'A pandit must have a name']
     },
-    contactDetails:{
+    contactDetails: {
         phone: {
             type: String,
             required: [true, 'A pandit must have a phone number']
@@ -24,8 +24,11 @@ const panditSchema = new Schema({
         type: Number,
         default: 4.5
     },
-    feesCharged:{
+    feesCharged: {
         baseFee: Number,
         additionalFeePerHour: Number
     }
 })
+
+const Pandit = mongoose.model('Pandit', panditSchema)
+module.exports = Pandit
