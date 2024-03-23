@@ -3,8 +3,6 @@ const dotenv = require('dotenv')
 
 dotenv.config({ path: './config.env' })
 
-const app = require('./app')
-
 const DB_URI = process.env.MONGODBURL.replace('<password>', process.env.MONGODBPASSWORD)
 
 mongoose.connect(DB_URI, {
@@ -13,6 +11,8 @@ mongoose.connect(DB_URI, {
 }).then(() => {
     console.log('DB connection successful')
 })
+
+const app = require('./app') //import express app
 
 // Start server
 const port = process.env.PORT || 3000
