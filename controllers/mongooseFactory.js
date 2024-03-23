@@ -4,7 +4,6 @@ const APIFeatures = require('../utils/apiFeatures')
 
 exports.deleteOne = (Model) => {
     return catchAsync(async (req, res, next) => {
-        // Model is can accessed because of lexical scope
         const doc = await Model.findByIdAndDelete(req.params.id)
 
         if (!doc) return next(new AppError('No doc found with that ID', 404))

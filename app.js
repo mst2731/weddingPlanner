@@ -13,14 +13,10 @@ app.use(express.json({ limit: '10kb' }))
 
 // Adding routers
 const venueRouter = require('./routes/venueRoute')
+const vendorRouter = require('./routes/vendorRoute')
 
+// use the routers
 app.use('/api/venues', venueRouter)
-
-// add a simple get route
-app.get('/', (req, res) => {
-    res.status(200).json({
-        message: 'Hello from the server'
-    })
-})
+app.use('/api/vendors', vendorRouter)
 
 module.exports = app
