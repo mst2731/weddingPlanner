@@ -1,9 +1,9 @@
 const User = require('../models/user')
-const catchAsync = require('../utils/catchAysnc')
+const catchAsync = require('../utils/catchAsync')
 const JWT = require('jsonwebtoken')
-// const AppError = require('../utils/appError')
+const AppError = require('../utils/appError')
 const sendEmail = require('../utils/email')
-const bcrypt = require('bcryptjs/dist/bcrypt')
+// const bcrypt = require('bcryptjs/dist/bcrypt')
 const {promisify} = require('util')
 const crypto = require('crypto')
 
@@ -87,7 +87,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   // check if user still exists
   const user = await User.findById(decoded.id)
   if (!user) {
-    return next(new AppError('this token no longer belong to any user', 401))
+    return next(new AppError('This token no longer belongs to any user', 401))
   }
   // check if user password has been changed after the token has been issued
   if(user.changedPasswordAfter(decoded.iat)) return next(new AppError('password has been changed, please login again',401))

@@ -43,3 +43,6 @@ const decorSchema = new Schema({
     ]
 
 })
+
+const Decor = mongoose.model('Decor', decorSchema)
+module.exports = Decor

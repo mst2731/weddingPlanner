@@ -1,0 +1,10 @@
+const Venue = require('../models/venue')
+const factory = require('./mongooseFactory')
+
+exports.getAllVenues = factory.getAll(Venue)
+exports.getVenue = factory.getOne(Venue)
+exports.createVenue = factory.createOne(Venue)
+exports.updateVenue = factory.updateOne(Venue)
+exports.deleteVenue = factory.deleteOne(Venue)
+exports.getVenuesByCity = factory.getAll(Venue)
+exports.getVenuesByType = factory.getAll(Venue)
