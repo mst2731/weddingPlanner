@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
+const app = require('./app')
 
 dotenv.config({ path: './config.env' })
 
@@ -10,4 +11,11 @@ mongoose.connect(DB_URI, {
     useUnifiedTopology: true
 }).then(() => {
     console.log('DB connection successful')
+})
+
+// Start server
+const port = process.env.PORT || 3000
+const host = process.env.HOST || 'localhost'
+app.listen(port, host, () => {
+    console.log(`Server running at http://${host}:${port}`)
 })
