@@ -54,9 +54,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   const user = await User.findOne({ email }).select('+password')
-
   if (!user || !(await user.correctPassword(password, user.password))) return next(new AppError('please enter valid mail or password', 401))
-
 
   createAndSendToken(user, 200, res)
 })
@@ -97,6 +95,9 @@ exports.restrictTo = (...roles) => { // any no.of arguements
 
 exports.checkUserOwnership = (Model) => catchAsync(async (req, res, next) => {
   let model = Model || req.model
+  if (!model) {
+    return next(new AppError('No model found', 500))
+  }
   const doc = await model.findById(req.params.id)
 
   if (!doc) {

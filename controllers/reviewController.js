@@ -1,7 +1,5 @@
 const Review = require('../models/review')
-const catchAsync = require('../utils/catchAsync')
 const factory = require('./mongooseFactory')
-
 
 exports.setReqBodyFields = (req, res, next) => {
   // setting fields for nested route /tours/tourId/review

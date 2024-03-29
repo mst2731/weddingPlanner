@@ -18,13 +18,12 @@ const sendErrorProd = (err, res) => {
     })
   } else {
     //programming error, dont leak it to client
-    console.log('ERROR💥', err)
+    console.log('ERROR💥 ', err)
     res.status(500).json({
       statusCode: 'fail',
       message: 'we saw it too, will fix asap'
     })
   }
-
 }
 
 const handleCastErrorDB = (err) => {
@@ -67,6 +66,7 @@ module.exports = (err, req, res, next) => { // if we specifing 4 parameters then
 
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError()
     if (!error.message) error.message = err.message
+
     sendErrorProd(error, res)
   }
 }

@@ -65,7 +65,6 @@ userSchema.pre('save', async function (next) {
   //delete passwordConfirm
   this.passwordConfirm = undefined
 
-  console.log('password is hashed')
   next()
 })
 

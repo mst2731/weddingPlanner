@@ -9,7 +9,7 @@ const sendMail = async (options) => {
             user: process.env.EMAIL_USERNAME,
             pass: process.env.EMAIL_PASSWORD
         }
-    });
+    })
 
     //2.Define email options
     const mailOptions = {
