@@ -21,4 +21,6 @@ router.route('/city/:city')
 router.route('/type/:type')
     .get(venueController.getVenuesByCityOrType)
 
+//sort by capacity
+
 module.exports = router

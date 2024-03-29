@@ -41,7 +41,12 @@ const venueSchema = new Schema({
         type: Number,
         required: [true, 'A venue must have a price']
     },
-    amenities: [String]
+    amenities: [String],
+    reviews:[
+        {
+            
+        }
+    ]
 })
 
 const Venue = mongoose.model('Venue', venueSchema)

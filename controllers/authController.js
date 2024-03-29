@@ -50,8 +50,7 @@ exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body
 
   if (!email || !password) {
-    const err = new AppError('please provide email and password', 400)
-    return next(err.toJSON())
+    return next(new AppError('please provide email and password', 400))
   }
 
   const user = await User.findOne({ email }).select('+password')

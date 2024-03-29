@@ -35,4 +35,7 @@ router.route('/:vendorType/:id')
     .patch(setModel, vendorController.updateVendor)
     .delete(setModel, vendorController.deleteVendor)
 
+
+// sort by ratings
+
 module.exports = router

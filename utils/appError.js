@@ -7,14 +7,6 @@ class AppError extends Error {
         this.isOperational = true
         Error.captureStackTrace(this, this.constructor)
     }
-
-    toJSON() {
-        return {
-            message: this.message,
-            statusCode: this.statusCode,
-            status: this.status
-        }
-    }
 }
 
 module.exports = AppError
