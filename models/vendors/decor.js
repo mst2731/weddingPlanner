@@ -32,13 +32,8 @@ const decorSchema = new Schema({
     portfolio: [String], // List of image URLs
     clientReviews:[
         {
-            clientName: String,
-            review: String,
-            rating: Number,
-            date: {
-                type: Date,
-                default: Date.now
-            }
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
         }
     ]
 })

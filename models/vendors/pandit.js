@@ -27,7 +27,13 @@ const panditSchema = new Schema({
     feesCharged: {
         baseFee: Number,
         additionalFeePerHour: Number
-    }
+    },
+    clientReviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
+        }
+    ]
 })
 
 const Pandit = mongoose.model('Pandit', panditSchema)
