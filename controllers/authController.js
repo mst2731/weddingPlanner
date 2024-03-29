@@ -3,14 +3,11 @@ const catchAsync = require('../utils/catchAsync')
 const JWT = require('jsonwebtoken')
 const AppError = require('../utils/appError')
 const sendEmail = require('../utils/email')
-// const bcrypt = require('bcryptjs/dist/bcrypt')
-const {promisify} = require('util')
+const { promisify } = require('util')
 const crypto = require('crypto')
 
 const signToken = (id) => {
-  return JWT.sign({ id}, process.env.JWT_SECRET, 
-    {expiresIn: process.env.JWT_EXPIRESIN}
-  )
+  return JWT.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRESIN })
 }
 
 const createAndSendToken = (user, statusCode, res) => {
@@ -18,7 +15,6 @@ const createAndSendToken = (user, statusCode, res) => {
   const cookieOpts = {
     expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPRIES_IN * 24 * 60 * 60 * 1000),
     httpOnly: true,
-    // secure: false (if set true, cookie will only work for https)
   }
 
   if (process.env.NODE_ENV === 'production') cookieOpts.secure = true
@@ -29,7 +25,6 @@ const createAndSendToken = (user, statusCode, res) => {
   res.cookie('jwt', JWTToken, cookieOpts)
   res.status(statusCode).json({
     status: 'success',
-    message: 'password changed successfully',
     token: JWTToken,
     data: {
       user
@@ -48,23 +43,23 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordResetToken: req.body.passwordResetToken,
     passwordResetExpires: req.body.passwordResetToken
   })
-  const token = signToken(newUser._id)
-  createAndSendToken (newUser, 201, res)
+  createAndSendToken(newUser, 201, res)
 })
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { email, password} = req.body
+  const { email, password } = req.body
 
   if (!email || !password) {
-    return next(new AppError('please provide email and password', 400))
+    const err = new AppError('please provide email and password', 400)
+    return next(err.toJSON())
   }
 
-  const user = await User.findOne({email}).select('+password')
+  const user = await User.findOne({ email }).select('+password')
 
-  if(!user || !(await user.correctPassword(password, user.password))) return next(new AppError('please enter valid mail or password', 401))
+  if (!user || !(await user.correctPassword(password, user.password))) return next(new AppError('please enter valid mail or password', 401))
 
-  
-  createAndSendToken (user, 200, res)
+
+  createAndSendToken(user, 200, res)
 })
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -72,7 +67,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (req?.headers?.authorization?.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1]
   }
-  if(!token) return next(new AppError('you are not logged in, please login to get access.', 401))
+  if (!token) return next(new AppError('you are not logged in, please login to get access.', 401))
 
   const decoded = await promisify(JWT.verify)(token, process.env.JWT_SECRET)
   /*
@@ -82,22 +77,20 @@ exports.protect = catchAsync(async (req, res, next) => {
     end Date: 
   }
   */
-  // console.log(decoded, "is JWT payload")
 
-  // check if user still exists
   const user = await User.findById(decoded.id)
   if (!user) {
     return next(new AppError('This token no longer belongs to any user', 401))
   }
   // check if user password has been changed after the token has been issued
-  if(user.changedPasswordAfter(decoded.iat)) return next(new AppError('password has been changed, please login again',401))
+  if (user.changedPasswordAfter(decoded.iat)) return next(new AppError('password has been changed, please login again', 401))
   req.user = user
   return next()
 })
 
 exports.restrictTo = (...roles) => { // any no.of arguements
   // roles is an array
-  return ((req, res, next)=>{
+  return ((req, res, next) => {
     if (!roles.includes(req.user.role)) return next(new AppError('you dont have permission to perform this action', 403))
     next()
   })
@@ -105,15 +98,17 @@ exports.restrictTo = (...roles) => { // any no.of arguements
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   //1. check user
-  let user = await User.findOne({email: req.body.email})
+  let user = await User.findOne({ email: req.body.email })
   if (!user) {
     return next(new AppError('There is no user with that email', 404))
   }
   //2. create reset token
   const resetToken = user.createPasswordResetToken()
-  user.save({validateBeforeSave: false}, (err, doc) => {
-    if (err) return console.log('error while saving')
-  })
+  try {
+    await user.save({ validateBeforeSave: false });
+  } catch (err) {
+    console.log('error while saving');
+  }
   //3. send reset token via mail
   //https://domain:port/endpoint/:token
   const resetURI = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`
@@ -133,10 +128,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   } catch (err) {
     user.passwordResetToken = undefined
     user.passwordResetExpires = undefined
-    await user.save({validateBeforeSave: false})
-    return next(new AppError('There was a problem sending mail. Try again later.',500))
+    await user.save({ validateBeforeSave: false })
+    return next(new AppError('There was a problem sending mail. Try again later.', 500))
   }
-  
+
 })
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
@@ -145,7 +140,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   const hashedpasswordResetToken = crypto.createHash('sha256').update(passwordResetToken).digest('hex')
   const user = await User.findOne({
     passwordResetToken: hashedpasswordResetToken,
-     passwordResetExpires: {$gte: Date.now()}
+    passwordResetExpires: { $gte: Date.now() }
   })
   //2. if token not expired and user exists then change the password
   if (!user) {
@@ -159,7 +154,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   await user.save()
   //4. log the user in and send JWT
-  createAndSendToken (user, 200, res)
+  createAndSendToken(user, 200, res)
 })
 
 exports.updatePassword = catchAsync(async (req, res, next) => {

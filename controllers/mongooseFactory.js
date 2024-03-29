@@ -52,8 +52,6 @@ exports.getOne = (Model, popOps) => {
 exports.getAll = (Model) => {
     return catchAsync(async (req, res, next) => {
         let filter = {}
-        if (req.params.city) filter = { city: req.params.city }
-        if (req.params.type && Model.modelName === 'Venue') filter = { type: req.params.type }
         const features = new APIFeatures(Model.find(filter), req.query)
             .filter()
             .sort()

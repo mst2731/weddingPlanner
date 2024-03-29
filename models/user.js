@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const bcrpyt = require('bcryptjs')
+const bcrypt = require('bcryptjs')
 const crypto = require('crypto')
 const res = require('express/lib/response')
 
@@ -45,6 +45,12 @@ const userSchema = new mongoose.Schema({
       message: 'password and passwordConfirm should be same'
     }
   },
+  favourites:[
+    {
+      id: mongoose.Schema.ObjectId,
+      modelName: String
+    }
+  ],
   active: Boolean,
   changedPasswordAt: Date,
   passwordResetToken: String,
@@ -55,7 +61,7 @@ userSchema.pre('save', async function (next) {
   //only run this function when password field is modified
   if (!this.isModified('password')) return next()
   //hash the password with salt length 12
-  this.password = await bcrpyt.hash(this.password, 12)
+  this.password = await bcrypt.hash(this.password, 12)
   //delete passwordConfirm
   this.passwordConfirm = undefined
 

@@ -15,21 +15,23 @@ const venueSchema = new Schema({
         type: Number,
         required: [true, 'A venue must have a maximum capacity']
     },
-    phone: {
-        type: String,
-        required: [true, 'A venue must have a phone number']
-    },
-    email: {
-        type: String,
-        required: [true, 'A venue must have an email']
-    },
-    city: {
-        type: String,
-        required: [true, 'A venue must have a city']
-    },
-    address: {
-        type: String,
-        required: [true, 'A venue must have an address']
+    contactDetails: {
+        phone: {
+            type: String,
+            required: [true, 'A venue must have a phone number']
+        },
+        email: {
+            type: String,
+            required: [true, 'A venue must have an email']
+        },
+        city: {
+            type: String,
+            required: [true, 'A venue must have a city']
+        },
+        address: {
+            type: String,
+            required: [true, 'A venue must have an address']
+        }
     },
     rating: {
         type: Number,
