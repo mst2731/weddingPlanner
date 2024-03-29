@@ -21,15 +21,24 @@ const makeupSchema = new Schema({
         type: Number,
         default: 4.5
     },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'A food caterer must be associated with a user']
+    },
     specialities: [String], // bridal, party, etc
     experienceYears: Number,
-    productsUsed: [String], // List of brands
-    clientReviews: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Review'
-        }
-    ]
+    productsUsed: [String] // List of brands
+},{
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
+
+// add virtual populate
+makeupSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'onModelId',
+    localField: '_id'
 })
 
 const Makeup = mongoose.model('Makeup', makeupSchema)

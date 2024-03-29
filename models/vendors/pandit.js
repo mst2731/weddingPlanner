@@ -28,12 +28,21 @@ const panditSchema = new Schema({
         baseFee: Number,
         additionalFeePerHour: Number
     },
-    clientReviews: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Review'
-        }
-    ]
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'A food caterer must be associated with a user']
+    },
+},{
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
+
+// add virtual populate
+panditSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'onModelId',
+    localField: '_id'
 })
 
 const Pandit = mongoose.model('Pandit', panditSchema)

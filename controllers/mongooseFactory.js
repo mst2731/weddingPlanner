@@ -32,6 +32,7 @@ exports.updateOne = (Model) => catchAsync(async (req, res, next) => {
 
 exports.createOne = (Model) => {
     return catchAsync(async (req, res, next) => {
+        if (req.user) req.body.userId = req.user.id
         const doc = await Model.create(req.body)
         res.status(201).json(doc)
     })
@@ -40,7 +41,8 @@ exports.createOne = (Model) => {
 exports.getOne = (Model, popOps) => {
     return catchAsync(async (req, res, next) => {
         let query = Model.findById(req.params.id)
-        if (popOps) query = query.populate(popOps).cache({ key: req.user?.id })
+        // if (popOps) query = query.populate(popOps).cache({ key: req.user?.id })
+        if (popOps) query = query.populate(popOps)
         const doc = await query
 
         if (!doc) return next(new AppError('No doc found with that ID', 404))

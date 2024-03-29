@@ -17,6 +17,11 @@ const foodCaterSchema = new Schema({
         },
         city: String
     },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'A food caterer must be associated with a user']
+    },
     ratings: {
         type: Number,
         default: 4.5
@@ -24,17 +29,22 @@ const foodCaterSchema = new Schema({
     cuisine: [String], // Indian, Chinese, etc
     experienceYears: Number,
     avgPricesPerPlate: [
-        {
+        {   
+            _id: false,
             cuisine: String,
             price: Number
         }
-    ],
-    clientReviews:[
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Review'
-        }
     ]
+},{
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
+
+// add virtual populate
+foodCaterSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'onModelId',
+    localField: '_id'
 })
 
 const FoodCater = mongoose.model('FoodCater', foodCaterSchema)

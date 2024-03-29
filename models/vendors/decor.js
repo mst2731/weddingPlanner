@@ -27,15 +27,24 @@ const decorSchema = new Schema({
             default: 0
         }
     },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'A food caterer must be associated with a user']
+    },
     servicesOffered: [String], // floral, lighting, etc
     experienceYears: Number,
     portfolio: [String], // List of image URLs
-    clientReviews:[
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Review'
-        }
-    ]
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
+
+// add virtual populate
+decorSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'onModelId',
+    localField: '_id'
 })
 
 const Decor = mongoose.model('Decor', decorSchema)

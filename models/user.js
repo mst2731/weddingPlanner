@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['user', 'vendor', 'admin'],
-    default: 'user'
+    required: [true, 'role is required']
   },
   photo: {
     type: String
@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
       message: 'password and passwordConfirm should be same'
     }
   },
-  favourites:[
+  favourites: [
     {
       id: mongoose.Schema.ObjectId,
       modelName: String
@@ -108,10 +108,10 @@ userSchema.methods.createPasswordResetToken = function () {
 
 userSchema.pre(/^find/, function (next) {
   //this points to current query
-  this.find({active: {$ne: false}})
+  this.find({ active: { $ne: false } })
   next()
 })
 
-const User = mongoose.model('Users', userSchema)
+const User = mongoose.model('User', userSchema)
 
 module.exports = User

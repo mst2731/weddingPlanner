@@ -27,12 +27,21 @@ const photographerSchema = new Schema({
         type: Number,
         required: [true, 'A photographer must have an average price']
     },
-    clientReviews:[
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Review'
-        }
-    ]
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'A food caterer must be associated with a user']
+    }
+},{
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
+
+// add virtual populate
+photographerSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'onModelId',
+    localField: '_id'
 })
 
 const Photographer = mongoose.model('Photographer', photographerSchema)

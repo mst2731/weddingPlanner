@@ -95,6 +95,21 @@ exports.restrictTo = (...roles) => { // any no.of arguements
   })
 }
 
+exports.checkUserOwnership = (Model) => catchAsync(async (req, res, next) => {
+  let model = Model || req.model
+  const doc = await model.findById(req.params.id)
+
+  if (!doc) {
+    return next(new AppError('No document found with that ID', 404))
+  }
+
+  if (!doc.userId.equals(req.user.id)) {
+    return next(new AppError('You do not have permission to modify this document', 403))
+  }
+
+  next()
+})
+
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   //1. check user
   let user = await User.findOne({ email: req.body.email })
@@ -104,9 +119,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   //2. create reset token
   const resetToken = user.createPasswordResetToken()
   try {
-    await user.save({ validateBeforeSave: false });
+    await user.save({ validateBeforeSave: false })
   } catch (err) {
-    console.log('error while saving');
+    console.log('error while saving')
   }
   //3. send reset token via mail
   //https://domain:port/endpoint/:token

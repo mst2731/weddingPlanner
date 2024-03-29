@@ -5,6 +5,7 @@ const FoodCater = require('../models/vendors/foodCater')
 const Photographer = require('../models/vendors/photographer')
 const Makeup = require('../models/vendors/makeup')
 const vendorController = require('../controllers/vendorController')
+const authController = require('../controllers/authController')
 
 function setModel(req, res, next) {
     const vendorType = req.params.vendorType
@@ -27,13 +28,13 @@ function setModel(req, res, next) {
 // get all vendors and create a vendor
 router.route('/:vendorType')
     .get(setModel, vendorController.getAllVendors)
-    .post(setModel, vendorController.createVendor)
+    .post(setModel, authController.protect, authController.restrictTo('admin', 'vendor'), vendorController.createVendor)
 
 // get a vendor, update a vendor, delete a vendor
 router.route('/:vendorType/:id')
     .get(setModel, vendorController.getVendor)
-    .patch(setModel, vendorController.updateVendor)
-    .delete(setModel, vendorController.deleteVendor)
+    .patch(setModel, authController.protect, authController.checkUserOwnership, vendorController.updateVendor)
+    .delete(setModel, authController.protect, authController.checkUserOwnership, vendorController.deleteVendor)
 
 
 // sort by ratings

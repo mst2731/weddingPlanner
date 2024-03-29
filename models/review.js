@@ -1,4 +1,4 @@
-const mongoose  = require('mongoose')
+const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const reviewSchema = new Schema({
@@ -15,15 +15,20 @@ const reviewSchema = new Schema({
         ref: 'User',
         required: [true, 'A review must have a user']
     },
-    onModel:{
+    onModelId: {
+        type: Schema.Types.ObjectId,
+        required: [true, 'A review must have a model id'],
+        refPath: 'onModel'
+    },
+    onModel: {
         type: String,
-        enum: ['Venue', 'Decor', 'FoodCater', 'Photographer', 'Makeup', 'Pandit'],
-        required: [true, 'A review must have a model']
+        required: true,
+        enum: ['Venue', 'Pandit', 'Decor', 'Photographer', 'FoodCater', 'Makeup'] // list of your models
     }
 })
 
 // populate user
-reviewSchema.pre(/^find/, function(next){
+reviewSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'user',
         select: 'name photo'

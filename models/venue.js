@@ -41,12 +41,22 @@ const venueSchema = new Schema({
         type: Number,
         required: [true, 'A venue must have a price']
     },
-    amenities: [String],
-    reviews:[
-        {
-            
-        }
-    ]
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'A food caterer must be associated with a user']
+    },
+    amenities: [String]
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
+
+// add virtual populate
+venueSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'onModelId',
+    localField: '_id'
 })
 
 const Venue = mongoose.model('Venue', venueSchema)
