@@ -23,6 +23,7 @@ const venueRouter = require('./routes/venueRoute')
 const vendorRouter = require('./routes/vendorRoute')
 const userRouter = require('./routes/userRoute')
 const reviewRouter = require('./routes/reviewRoute')
+const favouriteRouter = require('./routes/favouriteRoute')
 
 
 // use the routers
@@ -30,6 +31,7 @@ app.use('/api/venues', venueRouter)
 app.use('/api/vendors', vendorRouter)
 app.use('/api/users', userRouter)
 app.use('/api/reviews', reviewRouter)
+app.use('/api/favourites', favouriteRouter)
 
 app.all('*', (req, res, next) => { // all for all methods (get, post, put, patch, delete)
     // '*' is for all api end points

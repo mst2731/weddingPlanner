@@ -21,3 +21,26 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         }
     })
 })
+
+exports.addToFavourites = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.user.id)
+    if (!user) return next(new AppError('user not found', 404))
+
+    if (!req.body.onModel || !req.body.favouriteId) return next(new AppError('FavouriteId and onModel fields are required', 400))
+
+    const favouriteData = {
+        onModel: req.body.onModel,
+        _id: req.body.favouriteId
+    }
+
+    if (!user.favourites.some(fav => fav._id)) {
+        user.favourites.push(favouriteData)
+        await user.save()
+    }
+})
+
+exports.getMe = (req, res, next) => {
+    req.params.id = req.user.id
+    next()
+}
+exports.getUser = factory.getOne(User)

@@ -1,10 +1,11 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const crypto = require('crypto')
 const res = require('express/lib/response')
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   name: {
     type: String,
     required: [true, 'name is required']
@@ -45,16 +46,13 @@ const userSchema = new mongoose.Schema({
       message: 'password and passwordConfirm should be same'
     }
   },
-  favourites: [
-    {
-      id: mongoose.Schema.ObjectId,
-      modelName: String
-    }
-  ],
   active: Boolean,
   changedPasswordAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date
+}, {
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 })
 
 userSchema.pre('save', async function (next) {
@@ -111,6 +109,12 @@ userSchema.pre(/^find/, function (next) {
   next()
 })
 
-const User = mongoose.model('User', userSchema)
+// populate favourites
+userSchema.virtual('favourites', {
+  ref: 'Favourite',
+  foreignField: 'userId',
+  localField: '_id'
+})
 
+const User = mongoose.model('User', userSchema)
 module.exports = User
