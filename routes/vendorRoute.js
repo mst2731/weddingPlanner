@@ -33,9 +33,8 @@ router.route('/:vendorType')
 // get a vendor, update a vendor, delete a vendor
 router.route('/:vendorType/:id')
     .get(setModel, vendorController.getVendor)
-    .patch(setModel, authController.protect, authController.checkUserOwnership, vendorController.updateVendor)
-    .delete(setModel, authController.protect, authController.checkUserOwnership, vendorController.deleteVendor)
-
+    .patch(setModel, authController.protect, authController.checkUserOwnership(), vendorController.updateVendor)
+    .delete(setModel, authController.protect, authController.checkUserOwnership(), vendorController.deleteVendor)
 
 // sort by ratings
 

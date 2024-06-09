@@ -5,6 +5,7 @@ const Review = require('../models/review')
 
 router.use(authController.protect)
 
+// need to have account for creating a review
 router.route('/')
     .post(reviewController.createReview)
 

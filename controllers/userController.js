@@ -39,6 +39,15 @@ exports.addToFavourites = catchAsync(async (req, res, next) => {
     }
 })
 
+exports.deleteMe = catchAsync(async (req, res, next) => {
+    await User.findByIdAndDelete(req.user.id)
+    res.status(200).json({
+      status: 'success',
+      data: {
+      }  
+    })  
+  })
+
 exports.getMe = (req, res, next) => {
     req.params.id = req.user.id
     next()

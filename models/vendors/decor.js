@@ -35,17 +35,22 @@ const decorSchema = new Schema({
     servicesOffered: [String], // floral, lighting, etc
     experienceYears: Number,
     portfolio: [String], // List of image URLs
-}, {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+}, 
+{
+    id: false // to remove the virtual id from the response
 })
 
 // add virtual populate
 decorSchema.virtual('reviews', {
     ref: 'Review',
     foreignField: 'onModelId',
-    localField: '_id'
+    localField: '_id',
+    justOne: false,
+    match: { onModel: 'Decor' }
 })
+
+decorSchema.set('toObject', { virtuals: true })
+decorSchema.set('toJSON', { virtuals: true })
 
 const Decor = mongoose.model('Decor', decorSchema)
 module.exports = Decor

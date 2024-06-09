@@ -9,7 +9,8 @@ exports.createVendor = (req, res, next) => {
 }
 
 exports.getVendor = (req, res, next) => {
-    factory.getOne(req.model)(req, res, next)
+    let popOps = { path: 'reviews', select: 'review rating -onModelId' }
+    factory.getOne(req.model, popOps)(req, res, next)
 }
 
 exports.updateVendor = (req, res, next) => {

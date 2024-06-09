@@ -19,7 +19,7 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'vendor', 'admin'],
+    enum: ['user', 'vendor', 'admin'], // vendor and admin can add services
     required: [true, 'role is required']
   },
   photo: {

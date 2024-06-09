@@ -29,17 +29,22 @@ const makeupSchema = new Schema({
     specialities: [String], // bridal, party, etc
     experienceYears: Number,
     productsUsed: [String] // List of brands
-},{
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+},
+{
+    id: false
 })
 
 // add virtual populate
 makeupSchema.virtual('reviews', {
     ref: 'Review',
     foreignField: 'onModelId',
-    localField: '_id'
+    localField: '_id',
+    justOne: false,
+    match: { onModel: 'Makeup' }
 })
+
+makeupSchema.set('toObject', { virtuals: true })
+makeupSchema.set('toJSON', { virtuals: true })
 
 const Makeup = mongoose.model('Makeup', makeupSchema)
 module.exports = Makeup

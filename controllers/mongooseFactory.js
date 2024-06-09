@@ -44,18 +44,17 @@ exports.getOne = (Model, popOps) => {
         let query = Model.findById(req.params.id)
         // if (popOps) query = query.populate(popOps).cache({ key: req.user?.id })
         if (popOps) query = query.populate(popOps)
-        const doc = await query
+        let doc = await query
 
         if (!doc) return next(new AppError('No doc found with that ID', 404))
-
+        
         res.status(200).json(doc)
     })
 }
 
 exports.getAll = (Model) => {
     return catchAsync(async (req, res, next) => {
-        let filter = {}
-        const features = new APIFeatures(Model.find(filter), req.query)
+        const features = new APIFeatures(Model.find(), req.query)
             .filter()
             .sort()
             .limitFields()

@@ -11,6 +11,6 @@ exports.getVenuesByCityOrType = (req, res, next) => {
     const filter = {}
     if (req.params.city) filter.city = req.params.city
     if (req.params.type) filter.type = req.params.type
-    req.filter = filter
+    req.query.filter = filter
     factory.getAll(Venue)(req, res, next)
 }

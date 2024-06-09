@@ -3,11 +3,13 @@ const Favourite = require('../models/favourite')
 const favouriteController = require('../controllers/favouriteController')
 const authController = require('../controllers/authController')
 
+router.use(authController.protect) // protect all routes after this middleware
+
 router.route('/')
-    .get(authController.protect, favouriteController.getAllFavourites)
-    .post(authController.protect, favouriteController.createFavourite)
+    .get(favouriteController.getAllFavourites)
+    .post(favouriteController.createFavourite)
 
 router.route('/:id')
-    .delete(authController.protect, authController.checkUserOwnership(Favourite), favouriteController.deleteFavourite)
+    .delete(authController.checkUserOwnership(Favourite), favouriteController.deleteFavourite)
 
 module.exports = router

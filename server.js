@@ -17,3 +17,14 @@ const host = process.env.HOST || 'localhost'
 app.listen(port, host, () => {
     console.log(`Server running at http://${host}:${port}`)
 })
+
+process.on('unhandledRejection', err => {
+    console.log(err.name, err.message, "its an unhandled promise rejection")
+    //process.exit() shut down the server
+    //0 means success
+    //1 means uncaught expection occured
+    //server.close grace fully completes the current requests and then closes
+    server.close(() => {
+        process.exit(1)
+    })
+})

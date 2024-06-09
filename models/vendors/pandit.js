@@ -32,18 +32,23 @@ const panditSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: [true, 'A food caterer must be associated with a user']
-    },
-},{
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    }
+},
+{
+    id: false
 })
 
 // add virtual populate
 panditSchema.virtual('reviews', {
     ref: 'Review',
     foreignField: 'onModelId',
-    localField: '_id'
+    localField: '_id',
+    justOne: false,
+    match: { onModel: 'Pandit' }
 })
+
+panditSchema.set('toObject', { virtuals: true })
+panditSchema.set('toJSON', { virtuals: true })
 
 const Pandit = mongoose.model('Pandit', panditSchema)
 module.exports = Pandit

@@ -35,17 +35,22 @@ const foodCaterSchema = new Schema({
             price: Number
         }
     ]
-},{
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+},
+{
+    id: false
 })
 
 // add virtual populate
 foodCaterSchema.virtual('reviews', {
     ref: 'Review',
     foreignField: 'onModelId',
-    localField: '_id'
+    localField: '_id',
+    justOne: false,
+    match: { onModel: 'FoodCater' }
 })
+
+foodCaterSchema.set('toObject', { virtuals: true })
+foodCaterSchema.set('toJSON', { virtuals: true })
 
 const FoodCater = mongoose.model('FoodCater', foodCaterSchema)
 module.exports = FoodCater

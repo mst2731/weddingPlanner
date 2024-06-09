@@ -32,17 +32,22 @@ const photographerSchema = new Schema({
         ref: 'User',
         required: [true, 'A food caterer must be associated with a user']
     }
-},{
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+},
+{
+    id: false
 })
 
 // add virtual populate
 photographerSchema.virtual('reviews', {
     ref: 'Review',
     foreignField: 'onModelId',
-    localField: '_id'
+    localField: '_id',
+    justOne: false,
+    match: { onModel: 'Photographer' }
 })
+
+photographerSchema.set('toObject', { virtuals: true })
+photographerSchema.set('toJSON', { virtuals: true })
 
 const Photographer = mongoose.model('Photographer', photographerSchema)
 module.exports = Photographer
